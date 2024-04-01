@@ -1,1 +1,1 @@
-This repository contains assignments that correspond to the Typescript training carried out at SMBS.
+This repository contains assignments for the Typescript training carried out at SMBS.
