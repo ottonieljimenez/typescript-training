@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "description": "This is a testing note.",
+    "userId": 1,
+    "dueDate": "2024-04-04T20:41:32.733Z"
+  },
+  {
+    "id": 3,
+    "description": "This is a testing note for even further testing.",
+    "userId": 1,
+    "dueDate": "2024-04-04T20:45:19.752Z"
+  }
+]
