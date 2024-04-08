@@ -1,0 +1,13 @@
+{
+  "name": "typescript-assignment-4",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.12.3",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
+  }
+}
