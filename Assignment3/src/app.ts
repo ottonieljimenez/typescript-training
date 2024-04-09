@@ -1,6 +1,6 @@
 // Main app.ts
-import { Models } from "./models";
-import { Utilities } from "./utilities";
+import { Models } from "./models/Models";
+import { Utilities } from "./utilities/Utilities";
 
 // test `Utilities.clamp()` function
 
@@ -17,6 +17,11 @@ console.log(clampedValue) // expected output: 80
 const originalArray = [1, 1, 2, 3, 5, 8, 13];
 const shuffledArray = Utilities.shuffleArray(originalArray);
 console.log(shuffledArray);
+
+// test `Utilities.average()` function
+const numbersArray = [1, 2, 3, 4, 5];
+const average = Utilities.average(numbersArray);
+console.log(average); // expected output: 3.0
 
 // test `Models.Items<T,U>` class
 const product = new Models.Item<string, number>('Book', 20);
