@@ -1,5 +1,9 @@
+interface Itemwise {
+    item: any;
+}
+
 // Generic DataStore<T> class
-class DataStore<T> {
+class DataStore<T extends Itemwise> {
     values: T[];
 
     constructor(values: T[] = []) {
@@ -37,26 +41,69 @@ class DataStore<T> {
      */
     removeItem(index: number): void {
         this.values = this.values.filter(value => value !== this.values[index]);
-    }
+    }  
 }
 
 // test DataStore class
-const dataStore = new DataStore<number>([1, 1, 2, 3, 5]);
 
-// show dataStore items
-console.log(dataStore.getAllItems()); // output: [1, 1, 2, 3, 5]
+// test with numbers
+const numbersDataStore = new DataStore<{ item: number }>([{ item: 1 }, { item: 1 }, { item: 2 }, { item: 3 }, { item: 5 }]);
+// show numbersDataStore items
+console.log(numbersDataStore.getAllItems(), '\n');
 
-// add elements to the dataStore
-dataStore.addItems(8, 13, 21);
-
-// show dataStore items after adding new items
-console.log(dataStore.getAllItems()); // output: [1, 1, 2, 3, 5, 8, 13, 21]
+// add elements to the numbersDataStore
+numbersDataStore.addItems({ item: 8 } , { item: 13 }, { item: 21 });
+// show numbersDataStore items after adding new items
+console.log(numbersDataStore.getAllItems(), '\n');
 
 // get an element by index
-console.log(dataStore.getItem(4)) // output: 5
+console.log(numbersDataStore.getItem(4), '\n') // output: { item: 5 }
 
 // remove an item by index
-dataStore.removeItem(7)
-
+numbersDataStore.removeItem(7)
 // check items in the list after removal
-console.log(dataStore.getAllItems()) // output: [1, 1, 2, 3, 5, 8, 13]
+console.log(numbersDataStore.getAllItems(), '\n')
+
+//======================================================================================================================
+
+// test with strings
+const stringsDataStore = new DataStore<{ item: string }>([{ item: "apple" }, { item: "banana" }, { item: "orange" }]);
+// show stringsDataStore items
+console.log(stringsDataStore.getAllItems(), '\n');
+
+// add elements to the stringsDataStore
+stringsDataStore.addItems({ item: "mango" }, { item: "pineapple" });
+// show stringsDataStore items after adding new items
+console.log(stringsDataStore.getAllItems(), '\n');
+
+// get an element by index
+console.log(stringsDataStore.getItem(2), '\n') // output: { item: "orange" }
+
+// remove an item by index
+stringsDataStore.removeItem(1)
+// check items in the list after removal
+console.log(stringsDataStore.getAllItems(), '\n')
+
+//======================================================================================================================
+
+// test with objects
+const objectsDataStore = new DataStore<{ item: object }>([
+    { item: { name: "John", age: 30 } }, 
+    { item: { name: "Jane", age: 25 } },
+    { item: { name: "Joseph", age: 24 }}
+]);
+// show objectsDataStore items
+console.log(objectsDataStore.getAllItems(), '\n');
+
+// add elements to the objectsDataStore
+objectsDataStore.addItems({ item: { name: "Bob", age: 40 } }, { item: { name: "Alice", age: 35 }});
+// show objectsDataStore items after adding new items
+console.log(objectsDataStore.getAllItems(), '\n');
+
+// get an element by index
+console.log(objectsDataStore.getItem(0), '\n'); // output: { item: { name: "John", age: 30 } }
+
+// remove an item by index
+objectsDataStore.removeItem(1);
+// check items in the list after removal
+console.log(objectsDataStore.getAllItems(), '\n');

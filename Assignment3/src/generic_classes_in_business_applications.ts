@@ -1,42 +1,54 @@
 /**
  * Generic interface for order details
  */
-interface OrderDetails<T> {
-    orderId: number;
-    orderType: string;
-    saleAmount: number;
-    details: T;
+interface OrderDetails<T extends PhysicalProduct | DigitalProduct> {
+    id: number;
+    product: T;
+    quantity: number;
+    total: number;
+}
+
+interface Product {
+    name: string;
+    price: number;
+}
+
+interface PhysicalProduct extends Product {
+    weight: number;
+    dimensions: string;
+    color: string;
+    material: string;
+}
+
+interface DigitalProduct extends Product {
+    fileSize: number;
+    fileFormat: string;
 }
 
 /**
  * Generic class representing an order manager
  */
-class OrderManager<T> {
-    private orderType: string;
+class OrderManager<T extends PhysicalProduct | DigitalProduct> {
     private orders: OrderDetails<T>[] = [];
     private lastOrderId: number = 0;
     private totalSales: number = 0;
-    
-    constructor(orderType: string) {
-        this.orderType = orderType;
-    }
 
     /**
      * Method to add an order to the OrderManager
      * @param details of the order
      */
-    addOrder(details: T, amount: number): void {
+    addOrder(product: T, quantity: number): void {
         // update last order ID
         this.lastOrderId += 1;
         const order: OrderDetails<T> = { 
-            orderId: this.lastOrderId, 
-            orderType: this.orderType, 
-            saleAmount: amount, 
-            details: details 
+            id: this.lastOrderId, 
+            product: product,
+            quantity: quantity,
+            total: product.price * quantity
         };
         this.orders.push(order);
         // update total sales
-        this.totalSales += amount;
+        this.totalSales += order.total;
     }
 
     /**
@@ -53,7 +65,7 @@ class OrderManager<T> {
      * @returns the specific order by orderId
      */
     getOrder(orderId: number): OrderDetails<T> | undefined {
-        return this.orders.find(order => order.orderId === orderId);
+        return this.orders.find(order => order.id === orderId);
     }
 
     /**
@@ -71,48 +83,81 @@ class OrderManager<T> {
     getTotalSales(): number {
         return this.totalSales;
     }
+
+    /**
+     * Method to apply discount to an order
+     * @param orderId of the order to apply the discount
+     * @param discount to apply (from 0 to 1)
+     */
+    applyDiscountToOrder(orderId: number, discount: number): void {
+        const order = this.getOrder(orderId);
+        if (order) {
+            console.log(`Current price for order ${orderId} is US$ ${order.total}.`)
+            console.log(`Applying ${discount * 100}% to order ${orderId}...`)
+
+            order.total -= order.total * discount;
+
+            console.log(`Discount successfully applied. New price: US$ ${order.total}.\n`);
+        }
+    }
+
+    /**
+     * Method to apply discount to total sales
+     * @param discount to apply (from 0 to 1)
+     */
+    applyDiscountToTotalSales(discount: number): void {
+        console.log(`Current total sales: US$ ${this.totalSales}`);
+        console.log(`Applying ${discount * 100}% to total sales...`);
+
+        this.totalSales -= this.totalSales * discount;
+
+        console.log(`Discount successfully applied. New total sales: US$ ${this.totalSales}.\n`);
+    }
 }
 
-// example type for order details
-type OrderDetailType = object;
+console.log("Generic Classes in Business Applications\n");
 
-// create an instance of the OrderManager class for physical products
-const physicalProductsOrderManager = new OrderManager("Physical Products");
+// instantiate the OrderManager class
+const orderManager = new OrderManager();
 
-// add orders for physical products
-physicalProductsOrderManager.addOrder({ products: ["book", "notebook"], totalQuantity: 2}, 100)
-physicalProductsOrderManager.addOrder({ products: ["bracelet", "shoes"], totalQuantity: 4}, 200)
-physicalProductsOrderManager.addOrder({ products: ["cellphone", "case"], totalQuantity: 3}, 200)
+// create an object of type PhysicalProduct
+const physicalProduct: PhysicalProduct = {
+    name: "book",
+    price: 10,
+    weight: 1,
+    dimensions: "10x10x10",
+    color: "red",
+    material: "paper"
+}
 
-// show orders
-console.log(physicalProductsOrderManager.getOrders(), '\n');
+// add order for physical product
+orderManager.addOrder(physicalProduct, 2);
 
-// get order by orderId
-console.log(physicalProductsOrderManager.getOrder(2), '\n');
+// create an object of type DigitalProduct
+const digitalProduct: DigitalProduct = {
+    name: "eBook",
+    price: 20,
+    fileSize: 100,
+    fileFormat: "PDF"
+}
 
-// get total number of orders
-console.log(`Total orders: ${physicalProductsOrderManager.getTotalOrders()}\n`);
-
-// get total sales
-console.log(`Total sales (US$): ${physicalProductsOrderManager.getTotalSales()}\n`);
-
-// create an instance of the OrderManager class for digital products
-const digitalProductsOrderManager = new OrderManager("Digital Products");
-
-// add orders for physical products
-digitalProductsOrderManager.addOrder({ products: ["eBook", "Netflix subscription"], totalAmount: 2}, 50)
-digitalProductsOrderManager.addOrder({ products: ["wallpaper", "ChatGPT subscription"], totalAmount: 4}, 30)
-digitalProductsOrderManager.addOrder({ products: ["storage", "cloud service"], totalAmount: 3}, 100)
-digitalProductsOrderManager.addOrder({ products: ["Youtube Premium", "Google services"], totalAmount: 2}, 45)
+// add order for digital product
+orderManager.addOrder(digitalProduct, 1);
 
 // show orders
-console.log(digitalProductsOrderManager.getOrders(), '\n');
+console.log(orderManager.getOrders(), '\n');
 
 // get order by orderId
-console.log(digitalProductsOrderManager.getOrder(3), '\n');
+console.log(orderManager.getOrder(1), '\n');
 
 // get total number of orders
-console.log(`Total orders: ${digitalProductsOrderManager.getTotalOrders()}\n`);
+console.log(`Total orders: ${orderManager.getTotalOrders()}\n`)
 
 // get total sales
-console.log(`Total sales (US$): ${digitalProductsOrderManager.getTotalSales()}\n`);
+console.log(`Total sales (US$): ${orderManager.getTotalSales()}\n`);
+
+// apply discount to order
+orderManager.applyDiscountToOrder(1, 0.1); // 10% discount
+
+// apply discount to all orders
+orderManager.applyDiscountToTotalSales(0.2); // 20% discount
