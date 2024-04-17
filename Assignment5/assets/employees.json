@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "age": 30,
+    "role": "Software Engineering Manager",
+    "gender": "male"
+  },
+  {
+    "id": 2,
+    "age": 25,
+    "role": "Senior Software Engineer",
+    "gender": "female"
+  },
+  {
+    "id": 4,
+    "age": 28,
+    "role": "Compensation Analyst",
+    "gender": "female"
+  },
+  {
+    "id": 5,
+    "age": 32,
+    "role": "Fullstack Developer",
+    "gender": "male"
+  }
+]
